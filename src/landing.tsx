@@ -192,7 +192,7 @@ export default function SafariAdventures() {
                 SAFARIS<span className="text-amber-600 ml-1">ADVENTURE</span>
               </span>
               <span className="text-[10px] tracking-widest uppercase font-semibold text-stone-500">
-                Explore The Wild
+                Beyond the path, Into the wild
               </span>
             </div>
           </a>
