@@ -261,9 +261,7 @@ export default function SafariAdventures() {
               src={slide.image}
               alt={slide.title}
               className="w-full h-full object-cover transition-transform duration-1000 ease-out"
-              onError={(e) => {
-                e.target.src = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=1920";
-              }}
+              
             />
           </div>
         ))}
@@ -469,9 +467,7 @@ export default function SafariAdventures() {
                     src={tour.image}
                     alt={tour.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=800";
-                    }}
+                    
                   />
                 </div>
 
