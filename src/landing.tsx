@@ -141,6 +141,13 @@ export default function SafariAdventures() {
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
 
+  // Booking Modal State
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [bookingName, setBookingName] = useState('');
+  const [bookingPhone, setBookingPhone] = useState('');
+  const [bookingEmail, setBookingEmail] = useState('');
+  const [bookingItem, setBookingItem] = useState('General Safari & Travel Inquiry');
+
   // Automatic slideshow timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -151,6 +158,22 @@ export default function SafariAdventures() {
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+
+  // Open booking form with pre-selected item/service
+  const openBookingModal = (itemTitle = 'General Safari & Travel Inquiry') => {
+    setBookingItem(itemTitle);
+    setIsBookingOpen(true);
+  };
+
+  // Handle WhatsApp form submission
+  const handleWhatsAppSubmit = (e: any) => {
+    e.preventDefault();
+    const message = `Hello Safaris Adventure,\n\nI would like to book / enquire about: *${bookingItem}*.\n\nMy Details:\nName: ${bookingName}\nPhone: ${bookingPhone}\nEmail: ${bookingEmail}\n\nPlease get back to me. Thank you!`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/254780253855?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+    setIsBookingOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-stone-800 selection:bg-amber-500 selection:text-white">
@@ -196,12 +219,12 @@ export default function SafariAdventures() {
               <Phone className="w-3.5 h-3.5 text-amber-600" />
               <span>+254 702 308 649</span>
             </a>
-            <a 
-              href="#contact" 
-              className="bg-stone-900 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all"
+            <button 
+              onClick={() => openBookingModal('Book Now CTA')}
+              className="bg-stone-900 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all cursor-pointer"
             >
               Book Now
-            </a>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -235,13 +258,15 @@ export default function SafariAdventures() {
                 <Phone className="w-4 h-4 text-amber-600" />
                 <span>+254 702 308 649</span>
               </a>
-              <a 
-                href="#contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full text-center bg-amber-600 text-white font-bold py-3 rounded-xl shadow"
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  openBookingModal('Book Adventure Now (Mobile)');
+                }}
+                className="w-full text-center bg-amber-600 text-white font-bold py-3 rounded-xl shadow cursor-pointer"
               >
                 Book Adventure Now
-              </a>
+              </button>
             </div>
           </div>
         )}
@@ -261,7 +286,6 @@ export default function SafariAdventures() {
               src={slide.image}
               alt={slide.title}
               className="w-full h-full object-cover transition-transform duration-1000 ease-out"
-              
             />
           </div>
         ))}
@@ -286,12 +310,12 @@ export default function SafariAdventures() {
                 <span>Explore Packages</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
-              <a
-                href="#contact"
-                className="bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-bold px-8 py-4 rounded-xl transition-all"
+              <button
+                onClick={() => openBookingModal('Get In Touch (Hero)')}
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-bold px-8 py-4 rounded-xl transition-all cursor-pointer"
               >
                 Get In Touch
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -379,7 +403,7 @@ export default function SafariAdventures() {
               <div className="pt-4">
                 <button
                   onClick={() => setIsAboutExpanded(!isAboutExpanded)}
-                  className="inline-flex items-center gap-2 bg-stone-900 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-md text-sm"
+                  className="inline-flex items-center gap-2 bg-stone-900 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-md text-sm cursor-pointer"
                 >
                   <span>{isAboutExpanded ? 'Show Less' : 'Read More / Expand'}</span>
                   <ChevronRight className={`w-4 h-4 transition-transform ${isAboutExpanded ? 'rotate-90' : ''}`} />
@@ -422,13 +446,13 @@ export default function SafariAdventures() {
                     {service.description}
                   </p>
                 </div>
-                <a 
-                  href="#contact" 
-                  className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600 hover:text-stone-900 transition-colors pt-4 border-t border-stone-100"
+                <button 
+                  onClick={() => openBookingModal(`Service Inquiry: ${service.title}`)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600 hover:text-stone-900 transition-colors pt-4 border-t border-stone-100 bg-transparent border-0 cursor-pointer text-left w-full"
                 >
                   <span>Inquire Now</span>
                   <ChevronRight className="w-4 h-4" />
-                </a>
+                </button>
               </div>
             ))}
           </div>
@@ -467,7 +491,6 @@ export default function SafariAdventures() {
                     src={tour.image}
                     alt={tour.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    
                   />
                 </div>
 
@@ -484,12 +507,12 @@ export default function SafariAdventures() {
                     </p>
                   </div>
                   
-                  <a
-                    href="#contact"
-                    className="w-full bg-stone-900 hover:bg-amber-600 text-white text-center font-bold py-3 rounded-xl transition-all shadow text-sm block"
+                  <button
+                    onClick={() => openBookingModal(`Tour Booking: ${tour.title} (${tour.duration}) - ${tour.price}`)}
+                    className="w-full bg-stone-900 hover:bg-amber-600 text-white text-center font-bold py-3 rounded-xl transition-all shadow text-sm block cursor-pointer"
                   >
                     Book This Tour
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -627,7 +650,13 @@ export default function SafariAdventures() {
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-amber-500 shrink-0" />
                   <a href="tel:+254702308649" className="hover:text-amber-500 transition-colors">
-                    +254 702 308 649 | +254 780 253 855
+                    +254 702 308 649 (Alternative)
+                  </a>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-amber-500 shrink-0" />
+                  <a href="https://wa.me/254780253855" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">
+                    +254 780 253 855 (WhatsApp)
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
@@ -649,6 +678,101 @@ export default function SafariAdventures() {
           </div>
         </div>
       </footer>
+
+      {}
+      {isBookingOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-stone-200 relative overflow-hidden">
+            <button 
+              onClick={() => setIsBookingOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-2 mb-6">
+              <span className="text-xs font-bold uppercase tracking-widest text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                Instant WhatsApp Booking
+              </span>
+              <h3 className="text-2xl font-black text-stone-900">
+                Book / Enquire Now
+              </h3>
+              <p className="text-sm text-stone-600">
+                Fill out your details below to send your request instantly to our WhatsApp (+254 780 253 855).
+              </p>
+            </div>
+
+            <form onSubmit={handleWhatsAppSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Selected Item / Tour / Service
+                </label>
+                <input 
+                  type="text"
+                  value={bookingItem}
+                  onChange={(e) => setBookingItem(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-stone-50 text-stone-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Your Full Name
+                </label>
+                <input 
+                  type="text"
+                  placeholder="e.g. John Doe"
+                  value={bookingName}
+                  onChange={(e) => setBookingName(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Phone Number
+                </label>
+                <input 
+                  type="tel"
+                  placeholder="e.g. +254 712 345 678"
+                  value={bookingPhone}
+                  onChange={(e) => setBookingPhone(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Email Address
+                </label>
+                <input 
+                  type="email"
+                  placeholder="e.g. john@example.com"
+                  value={bookingEmail}
+                  onChange={(e) => setBookingEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button 
+                  type="submit"
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-base"
+                >
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                  </svg>
+                  <span>Send to WhatsApp (+254 780 253 855)</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );
